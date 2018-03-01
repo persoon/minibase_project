@@ -11,6 +11,10 @@ public class DB implements GlobalConst {
   
   private static final int bits_per_page = MAX_SPACE * 8;
   
+  // Number of page reads and writes
+  private int num_page_reads  = 0;
+  private int num_page_writes = 0;
+  //////////////////////////////////
   
   /** Open the database with the given name.
    *
@@ -149,6 +153,7 @@ public class DB implements GlobalConst {
     byte [] buffer = apage.getpage();  //new byte[MINIBASE_PAGESIZE];
     try{
       fp.read(buffer);
+      num_page_reads++;
     }
     catch (IOException e) {
       throw new FileIOException(e, "DB file I/O error");
@@ -179,6 +184,7 @@ public class DB implements GlobalConst {
     // Write the appropriate number of bytes.
     try{
       fp.write(apage.getpage());
+      num_page_writes++;
     }
     catch (IOException e) {
       throw new FileIOException(e, "DB file I/O error");
@@ -839,6 +845,15 @@ public class DB implements GlobalConst {
 
   } // end of unpinPage
   
+  // Accessor Methods for number of pages read and write. 
+  public int getNumPageReads(){
+    return num_page_reads;
+  }
+  
+  public int getNumPageWrites(){
+    return num_page_writes;
+  }
+  ///////////////////////////////////////////////////////
   
 }//end of DB class
 
